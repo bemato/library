@@ -24,6 +24,11 @@ function addBookToLibrary(){
 
 // This function will loop through the array and display each book.
 function displayBooks(){
+    //remove previous book lists.
+    while(library.hasChildNodes())
+      library.removeChild(library.childNodes[0]); 
+    
+    //display books currently in library array
     for (let i = 0; i < myLibrary.length; i++){
       let book = document.createElement('li');
       let removeBtn = document.createElement('button');
@@ -31,7 +36,10 @@ function displayBooks(){
 
       book.textContent = myLibrary[i].info();
       removeBtn.textContent = 'Remove';
+      removeBtn.classList.add('remove');
+
       readBtn.textContent = 'Read/Unread';
+      readBtn.classList.add('read');
 
       book.appendChild(removeBtn);
       book.appendChild(readBtn);
@@ -44,18 +52,27 @@ function displayBooks(){
 const newButton = document.querySelector('.new');
 const form = document.querySelector('.form');
 const addButton = document.querySelector('.add');
-const library = document.querySelector('.library');
-const allBooks = document.querySelectorAll('.library li');
-
+const library = document.querySelector('.library ul');
+const removeButton = document.querySelectorAll('.remove');
+const readBtn = document.querySelectorAll('.read');
 
 newButton.addEventListener('click', function(){
   form.style.display = 'block';
 });
 
 addButton.addEventListener('click', () => {
-  console.log(allBooks);
   addBookToLibrary();
   displayBooks();
+  
+  //reset form
+  form.style.display = 'none';
+  form.reset(); 
+});
+
+removeButton.forEach(element => {
+  element.addEventListener('click', () => {
+    
+  });
 });
 
 
