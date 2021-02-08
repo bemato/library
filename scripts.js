@@ -7,7 +7,7 @@ function Book(title, author, pages, read){
     this.read = read;
     
     this.info = function() {
-      (read) ? read = 'read' : read = 'not read';
+      (this.read) ? read = 'read' : read = 'not read';
       return "Title: " +title+ " Author: " +author+ " Pages: " +pages+ " Read: " +read;
     }
   }
@@ -24,22 +24,39 @@ function addBookToLibrary(){
 
 // This function will loop through the array and display each book.
 function displayBooks(){
-    //remove previous book lists.
-    while(library.hasChildNodes())
-      library.removeChild(library.childNodes[0]); 
-    
-    //display books currently in library array
+  //display books currently in library array
     for (let i = 0; i < myLibrary.length; i++){
       let book = document.createElement('li');
       let removeBtn = document.createElement('button');
       let readBtn = document.createElement('button'); //This button will read/unread the book.
 
       book.textContent = myLibrary[i].info();
-      removeBtn.textContent = 'Remove';
-      removeBtn.classList.add('remove');
+      book.setAttribute('data-index', i);
 
+      removeBtn.textContent = 'Remove';
       readBtn.textContent = 'Read/Unread';
-      readBtn.classList.add('read');
+      
+      //add event listener to remove button allowing book to be removed from myLibrary[]
+      removeBtn.addEventListener('click', () => {
+        let index = removeBtn.parentElement.getAttribute('data-index'); //The index where the book is stored in myLibrary[]
+        myLibrary.splice(index, 1);
+        resetBooks();
+        displayBooks();
+      });
+
+      //add event listener to read/unread button to change status of book to read/unread.
+      readBtn.addEventListener('click', () => {
+        if (myLibrary[i].read === true){
+          myLibrary[i].read = false;
+        }
+        else {
+          myLibrary[i].read = true;
+        }
+
+        console.log(myLibrary[i]);
+        resetBooks();
+        displayBooks();
+      });
 
       book.appendChild(removeBtn);
       book.appendChild(readBtn);
@@ -48,19 +65,24 @@ function displayBooks(){
     }
 }
 
+// this function resets books in the DOM.
+function resetBooks(){
+    while(library.hasChildNodes())
+    library.removeChild(library.childNodes[0]); 
+}
+
 //When button clicked, form brought up where user input book info (title, author, pages, read)
 const newButton = document.querySelector('.new');
 const form = document.querySelector('.form');
 const addButton = document.querySelector('.add');
 const library = document.querySelector('.library ul');
-const removeButton = document.querySelectorAll('.remove');
-const readBtn = document.querySelectorAll('.read');
 
 newButton.addEventListener('click', function(){
   form.style.display = 'block';
 });
 
 addButton.addEventListener('click', () => {
+  resetBooks();
   addBookToLibrary();
   displayBooks();
   
@@ -68,12 +90,3 @@ addButton.addEventListener('click', () => {
   form.style.display = 'none';
   form.reset(); 
 });
-
-removeButton.forEach(element => {
-  element.addEventListener('click', () => {
-    
-  });
-});
-
-
-
